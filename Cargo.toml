@@ -1,0 +1,11 @@
+[package]
+name = "nebulosus"
+version = "0.1.0"
+authors = ["Chris MacNaughton <chmacnaughton@gmail.com>"]
+
+[dependencies]
+clap = "*"
+hashicorp_vault = "*"
+log = "*"
+simple_logger = "*"
+toml = "0.1"
