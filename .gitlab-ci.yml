@@ -1,12 +1,8 @@
-image: ubuntu:vivid
-
-before_script:
-  - apt-get update
-  - apt-get install -y curl file build-essential unzip libssl-dev
+image: iceyec/ci-rust
 
 cache:
   untracked: true
-  key: "$CI_BUILD_NAME"
+  key: $CI_BUILD_STAGE/$CI_BUILD_REF_NAME
   paths:
     - $HOME/.cargo
     - $CI_PROJECT_DIR/target
@@ -19,18 +15,18 @@ test-stable-0.4.1:
     - VAULT_VERSION=0.4.1 bin/install-vault-release.sh
     - $HOME/bin/vault server -dev &
     - curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- -y --disable-sudo
-    - cargo build --release --verbose
+    - travis-cargo build
     - VAULT_ADDR=http://127.0.0.1:8200 $HOME/bin/vault token-create -id="test12345"
-    - cargo test --verbose
+    - travis-cargo test
 
 test-stable-0.5.0:
   script:
     - VAULT_VERSION=0.5.0 bin/install-vault-release.sh
     - $HOME/bin/vault server -dev &
     - curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- -y --disable-sudo
-    - cargo build --release --verbose
+    - travis-cargo build
     - VAULT_ADDR=http://127.0.0.1:8200 $HOME/bin/vault token-create -id="test12345"
-    - cargo test --verbose
+    - travis-cargo test
 
 test-beta-0.5.0:
   allow_failure: true
@@ -38,9 +34,9 @@ test-beta-0.5.0:
     - VAULT_VERSION=0.5.0 bin/install-vault-release.sh
     - $HOME/bin/vault server -dev &
     - curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- -y --disable-sudo --channel=beta
-    - cargo build --release --verbose
+    - travis-cargo build
     - VAULT_ADDR=http://127.0.0.1:8200 $HOME/bin/vault token-create -id="test12345"
-    - cargo test --verbose
+    - travis-cargo test
 
 test-nightly-0.5.0:
   allow_failure: true
@@ -48,6 +44,6 @@ test-nightly-0.5.0:
     - VAULT_VERSION=0.5.0 bin/install-vault-release.sh
     - $HOME/bin/vault server -dev &
     - curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- -y --disable-sudo --channel=nightly
-    - cargo build --release --verbose
+    - travis-cargo build
     - VAULT_ADDR=http://127.0.0.1:8200 $HOME/bin/vault token-create -id="test12345"
-    - cargo test --verbose
+    - travis-cargo test
